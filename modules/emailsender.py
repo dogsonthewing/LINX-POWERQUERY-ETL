@@ -7,7 +7,7 @@ def sendEmail(message):
     msg['Subject'] = "Automatização LINX - OK"
     msg['From'] = 'fg.bi.notifications@gmail.com'
     msg['To'] = 'bi@agenciafg.com.br'
-    password = 'qrcqntnoslagqfsv' 
+    password = '' 
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(message )
 
