@@ -1,8 +1,8 @@
 import ast
 import modules.config as configuration
 from modules.ETL import newOrders, updateOrders
-from modules.emailsender import sendEmail
 from datetime import datetime as dt
+
 
 def update():
   print("Updates")
@@ -15,6 +15,7 @@ def update():
   return
 
 def insert():
+  orderCounter = 0
   print()
   print('------------------------')
   print("Insertions")
@@ -25,9 +26,5 @@ def insert():
     configuration.setGlobalConfig(ast.literal_eval(config.data) , config.store)
     days = dt.today() - config.lastUpdateStore
     days = days.days
-    newOrders(days - 1)
-  
-  sendEmail("""<p>Lojas LINX atualizadas com sucesso</p>
-          <p>Lista de erros: {}</p>""".format(configuration.failedStores).encode('utf-8'))
-  print('Email enviado') 
-  return
+    orderCounter = newOrders(days - 1 , orderCounter)
+  return orderCounter

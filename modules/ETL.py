@@ -58,12 +58,13 @@ def loadList(orders):
     counter = 0
     print('Loading data into Big Query.')
     for order in orders:
-        counter = counter + int(insertOrders(order['orderId'] , order['creationDate'] , order['status'] , order['paymentNames'] , order['totalValue'] , order['shipmentStatus'] , order['orderStatusID']))
+        insertOrders(order['orderId'] , order['creationDate'] , order['status'] , order['paymentNames'] , order['totalValue'] , order['shipmentStatus'] , order['orderStatusID'])
+        counter = counter + 1
     lastUpdateDate(str(datetime.today() - timedelta(1))[0:10])
     print('Data was successfully loaded.')
     return counter
 
-def newOrders(counter):
+def newOrders(counter, orders):
     while counter > 0:
         config.setWhere(counter, counter - 1)
         extractedOrders = extractOrders()
@@ -71,9 +72,13 @@ def newOrders(counter):
             config.addFailedStore(str(config.storeName))
             print("Extraction error")
         else:
-            loadList(treatOrders(extractedOrders))       
+            orderCounter = loadList(treatOrders(extractedOrders))       
         counter = counter - 1
-    return 
+        orders = orders + orderCounter
+    try:
+        return orders
+    except:
+        return 0
 
 def updateOrders():
     config.setWhere(15 , 1)
